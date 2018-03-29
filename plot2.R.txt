@@ -1,0 +1,29 @@
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(data.table)
+library(stringr)
+
+setwd("C:/Users/shaban/Desktop/Coursera/R_projects/Charts_Week_1")
+
+# read data -----
+data <- read.table("household_power_consumption.txt", sep=";", header=TRUE)
+
+
+t1 <- data %>%
+        select(Date:Sub_metering_3) %>%
+        mutate(Date = as.Date(Date, format = "%d/%m/%Y")) %>%
+        filter(Date >= "2007/02/01" & Date <= "2007/02/02")
+
+t2 <- t1 %>%
+        mutate(dateTime = as.POSIXct(paste(Date, Time))) %>%
+        mutate(Global_active_power = as.numeric(as.character(Global_active_power))) %>%
+        mutate(Global_reactive_power = as.numeric(as.character(Global_reactive_power))) %>%
+        mutate(Voltage = as.numeric(as.character(Voltage))) %>%
+        mutate(Global_intensity = as.numeric(as.character(Global_intensity))) %>%
+        mutate(Sub_metering_1 = as.numeric(as.character(Sub_metering_1))) %>%
+        mutate(Sub_metering_2 = as.numeric(as.character(Sub_metering_2))) %>%
+        mutate(Sub_metering_3 = as.numeric(as.character(Sub_metering_3)))
+
+
+plot(t2$Global_active_power ~ t2$dateTime, type='l',ylab="Global Active Power (kilowatts)", xlab="")    
